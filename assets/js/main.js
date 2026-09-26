@@ -3,16 +3,20 @@
    ------------------------------------------------------------
    SCHOOL VIDEO:
    `videoUrl` below points at the school film on YouTube
-   (https://youtu.be/lIr4FbOtliw). It plays in the lightbox
-   when the "Play School Video" card under the hero is clicked.
-   Swap it for either
+   (https://youtu.be/lIr4FbOtliw — "Introduction | Bansal International
+   School | Kalali"). Clicking the "Play School Video" card below the hero
+   swaps the poster for the real player, in place. No popup, nothing to
+   get out of sync.
+
+   Swap `videoUrl` for either
      • a YouTube / Vimeo EMBED url, e.g.
-         "https://www.youtube.com/embed/VIDEO_ID"
+         "https://www.youtube-nocookie.com/embed/VIDEO_ID"
      • or a self-hosted file, e.g. "assets/video/school-video.mp4"
-   Leave it empty and the player shows a friendly holding message.
+   Leave it empty and the card shows a friendly holding message.
    ============================================================ */
 const SITE = {
-  videoUrl: "https://www.youtube.com/embed/lIr4FbOtliw",   // Bansal International School film
+  // privacy-enhanced mode — YouTube sets no cookies until playback starts
+  videoUrl: "https://www.youtube-nocookie.com/embed/lIr4FbOtliw",
   videoPoster: "assets/img/school-render.jpg"
 };
 
@@ -42,27 +46,27 @@ document.documentElement.classList.remove("no-js");
   items.forEach(el => io.observe(el));
 })();
 
-/* ---------- Video lightbox ---------- */
-(function videoLightbox () {
-  const trigger  = document.getElementById("playVideo");
-  const lightbox = document.getElementById("lightbox");
-  const stage    = document.getElementById("lightboxStage");
-  if (!trigger || !lightbox || !stage) return;
+/* ---------- School film: plays in place, where the poster is ---------- */
+(function schoolVideo () {
+  const card    = document.getElementById("videoCard");
+  const trigger = document.getElementById("playVideo");
+  const stage   = document.getElementById("videoPlayer");
+  if (!card || !trigger || !stage) return;
 
-  let lastFocused = null;
+  let started = false;
 
   function buildPlayer () {
-    stage.innerHTML = "";
     const url = (SITE.videoUrl || "").trim();
 
     if (!url) {
       const note = document.createElement("p");
-      note.className = "lightbox__note";
+      note.className = "video-card__note";
       note.innerHTML = "The school film is being finalised.<br>Please check back soon.";
       stage.appendChild(note);
       return;
     }
 
+    // self-hosted file?
     if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url)) {
       const video = document.createElement("video");
       video.src = url;
@@ -74,46 +78,26 @@ document.documentElement.classList.remove("no-js");
       return;
     }
 
+    // YouTube / Vimeo embed
     const frame = document.createElement("iframe");
-    frame.src = url + (url.includes("?") ? "&" : "?") + "autoplay=1&rel=0";
-    frame.title = "Bansal International School video";
-    frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-    frame.allowFullscreen = true;
+    frame.src = url + (url.includes("?") ? "&" : "?") +
+                "autoplay=1&rel=0&playsinline=1&modestbranding=1";
+    frame.title = "Introduction | Bansal International School, Kalali";
+    frame.setAttribute("allow",
+      "accelerometer; autoplay; clipboard-write; encrypted-media; " +
+      "gyroscope; picture-in-picture; web-share");
+    frame.setAttribute("allowfullscreen", "");
+    frame.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
     stage.appendChild(frame);
   }
 
-  function open () {
-    lastFocused = document.activeElement;
+  function start () {
+    if (started) return;
+    started = true;
     buildPlayer();
-    lightbox.hidden = false;
-    document.body.style.overflow = "hidden";
-    lightbox.querySelector(".lightbox__close").focus();
+    card.classList.add("is-playing");           // poster out, player in
+    trigger.setAttribute("aria-expanded", "true");
   }
 
-  function close () {
-    lightbox.hidden = true;
-    stage.innerHTML = "";                 // stops playback
-    document.body.style.overflow = "";
-    if (lastFocused) lastFocused.focus();
-  }
-
-  trigger.addEventListener("click", open);
-
-  lightbox.addEventListener("click", (e) => {
-    if (e.target.closest("[data-close]")) close();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !lightbox.hidden) close();
-    if (e.key !== "Tab" || lightbox.hidden) return;
-
-    // simple focus trap
-    const focusables = lightbox.querySelectorAll("button, iframe, video, [href]");
-    if (!focusables.length) return;
-    const first = focusables[0];
-    const last  = focusables[focusables.length - 1];
-
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  });
+  trigger.addEventListener("click", start);
 })();

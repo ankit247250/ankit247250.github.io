@@ -193,7 +193,7 @@ body{
   letter-spacing:-.008em;
 }
 
-/* the video card */
+/* the video card — a poster the visitor clicks, which becomes the player */
 .video-card{
   position:relative;
   display:block;
@@ -202,12 +202,12 @@ body{
   aspect-ratio:2 / 1;
   border-radius:clamp(18px, 2.67vw, 32px);
   overflow:hidden;
-  background:#DCE3E6;
+  background:#0B1220;
   box-shadow:var(--shadow-card);
   transition:transform .5s var(--ease), box-shadow .5s var(--ease);
 }
-.video-card:hover{ transform:translateY(-4px); box-shadow:0 40px 84px -34px rgba(23,38,86,.62); }
-.video-card:active{ transform:translateY(-1px); }
+.video-card:not(.is-playing):hover{ transform:translateY(-4px); box-shadow:0 40px 84px -34px rgba(23,38,86,.62); }
+.video-card:not(.is-playing):active{ transform:translateY(-1px); }
 
 .video-card__sky{
   position:absolute; inset:0; z-index:0;
@@ -216,6 +216,7 @@ body{
   background-position:top center;
   background-repeat:no-repeat;
   background-color:#DCE3E6;
+  transition:opacity .5s var(--ease);
 }
 .video-card__img{
   position:absolute; left:0; right:0; bottom:0; z-index:1;
@@ -223,20 +224,52 @@ body{
   object-fit:cover; object-position:center bottom;
   -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 12%,#000 34%);
   mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 12%,#000 34%);
+  transition:opacity .5s var(--ease);
 }
 .video-card__veil{
   position:absolute; inset:0; z-index:2;
   background:
     radial-gradient(58% 62% at 50% 46%, rgba(9,20,45,.42) 0%, rgba(9,20,45,.18) 60%, rgba(9,20,45,.04) 100%),
     linear-gradient(180deg, rgba(23,38,86,.22) 0%, rgba(23,38,86,.10) 45%, rgba(23,38,86,.30) 100%);
+  transition:opacity .5s var(--ease);
 }
-.video-card__center{
+.video-card__trigger{
   position:absolute; inset:0; z-index:3;
+  width:100%;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   gap:clamp(9px, 1.42vw, 17px);
   transform:translateY(-2%);
+  transition:opacity .45s var(--ease), visibility .45s;
 }
+
+/* the player sits exactly where the poster was */
+.video-card__player{
+  position:absolute; inset:0; z-index:5;
+  background:#05070D;
+  opacity:0; visibility:hidden;
+  transition:opacity .5s var(--ease), visibility .5s;
+}
+.video-card__player iframe,
+.video-card__player video{
+  width:100%; height:100%; border:0; display:block;
+}
+.video-card__note{
+  display:grid; place-items:center; height:100%;
+  padding:32px; text-align:center; color:var(--cream);
+  font-size:clamp(15px, 1.6vw, 19px); line-height:1.6;
+  background:linear-gradient(150deg,#172656,#0E1936);
+}
+
+/* clicked: poster fades out, player fades in */
+.video-card.is-playing{ transform:none; }
+.video-card.is-playing .video-card__trigger,
+.video-card.is-playing .video-card__veil,
+.video-card.is-playing .video-card__img,
+.video-card.is-playing .video-card__sky{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+.video-card.is-playing .video-card__player{ opacity:1; visibility:visible; }
 .play-btn{
   display:grid; place-items:center;
   width:clamp(48px, 6vw, 72px);
@@ -247,7 +280,7 @@ body{
   transition:transform .4s var(--ease);
 }
 .play-btn svg{ width:34%; height:34%; fill:var(--navy); margin-left:6%; }
-.video-card:hover .play-btn{ transform:scale(1.07); }
+.video-card:not(.is-playing):hover .play-btn{ transform:scale(1.07); }
 
 .video-card__label{
   font-size:clamp(15px, 2.25vw, 27px);
@@ -257,6 +290,20 @@ body{
   color:#FBF6EC;
   text-shadow:0 2px 14px rgba(9,20,45,.45);
 }
+
+/* always-visible escape hatch, in case a network blocks the embed */
+.vision__fallback{
+  margin-top:clamp(11px, 1.3vw, 16px);
+  font-size:clamp(12px, 1.35vw, 16px);
+  color:var(--navy);
+  opacity:.72;
+}
+.vision__fallback a{
+  color:var(--gold-deep);
+  text-underline-offset:3px;
+  transition:color .3s var(--ease);
+}
+.vision__fallback a:hover{ color:var(--navy); }
 
 /* ============================================================
    MISSION
@@ -451,55 +498,6 @@ body{
 }
 
 /* ============================================================
-   VIDEO LIGHTBOX
-   ============================================================ */
-.lightbox{
-  position:fixed; inset:0; z-index:120;
-  display:grid; place-items:center;
-  padding:clamp(16px, 4vw, 48px);
-}
-.lightbox[hidden]{ display:none; }
-.lightbox__backdrop{
-  position:absolute; inset:0;
-  background:rgba(9,17,38,.86);
-  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
-  animation:fadeIn .3s var(--ease) both;
-}
-.lightbox__dialog{
-  position:relative;
-  width:min(1000px, 100%);
-  animation:popIn .38s var(--ease) both;
-}
-.lightbox__stage{
-  position:relative;
-  aspect-ratio:16 / 9;
-  background:#000;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 40px 100px -30px #000;
-}
-.lightbox__stage iframe,
-.lightbox__stage video{ width:100%; height:100%; border:0; display:block; }
-.lightbox__note{
-  display:grid; place-items:center; height:100%;
-  padding:32px; text-align:center; color:var(--cream);
-  font-size:clamp(15px, 1.6vw, 19px); line-height:1.6;
-  background:linear-gradient(150deg,#172656,#0E1936);
-}
-.lightbox__close{
-  position:absolute; top:-14px; right:-14px; z-index:2;
-  width:44px; height:44px; border-radius:50%;
-  background:var(--cream); color:var(--navy);
-  font-size:26px; line-height:1;
-  display:grid; place-items:center;
-  box-shadow:0 10px 26px -8px rgba(0,0,0,.6);
-  transition:transform .25s var(--ease), background .25s var(--ease);
-}
-.lightbox__close:hover{ transform:rotate(90deg); background:var(--gold-500); }
-@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
-@keyframes popIn{ from{opacity:0; transform:translateY(14px) scale(.98)} to{opacity:1; transform:none} }
-
-/* ============================================================
    REVEAL ANIMATION
    ============================================================ */
 .reveal{ opacity:0; transform:translateY(18px); }
@@ -544,10 +542,9 @@ body{
   .video-card__label{ text-shadow:0 1px 8px rgba(9,20,45,.6); }
   .values__grid{ grid-template-columns:1fr; row-gap:32px; }
   .value__text{ max-width:24ch; }
-  .lightbox__close{ top:-46px; right:0; }
 }
 
 @media print{
   .reveal{ opacity:1 !important; transform:none !important; }
-  .video-card,.lightbox{ display:none !important; }
+  .video-card,.vision__fallback{ display:none !important; }
 }

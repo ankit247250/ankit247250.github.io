@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Bansal International School</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#172656">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<!-- Self-contained on purpose: no external CSS or images, so this page renders
+     correctly at any URL depth, on GitHub Pages and behind nginx alike. -->
+<style>
+  :root{
+    --cream:#F9F6F1; --navy:#172656; --gold:#C38313; --gold-deep:#A96D08;
+    --font:"Playfair Display","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;flex-direction:column;
+       background:var(--cream);color:var(--navy);font-family:var(--font);line-height:1.5;
+       -webkit-font-smoothing:antialiased;text-align:center}
+  .brand{padding:clamp(24px,3vw,38px) 24px 0}
+  .brand__mark{font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:.06em;
+               text-transform:uppercase;margin:0}
+  .brand__sub{font-size:clamp(11px,1.5vw,16px);font-weight:700;letter-spacing:.22em;
+              text-transform:uppercase;color:var(--gold-deep);margin:2px 0 0}
+  main{flex:1;display:grid;place-items:center;padding:clamp(28px,6vw,64px) 24px}
+  .code{font-size:clamp(76px,17vw,190px);font-weight:700;line-height:.9;letter-spacing:-.03em;
+        margin:0;background:linear-gradient(100deg,var(--gold) 0%,#D89B22 55%,var(--gold) 100%);
+        -webkit-background-clip:text;background-clip:text;color:transparent;
+        -webkit-text-fill-color:transparent}
+  h1{font-size:clamp(20px,3vw,34px);font-weight:700;text-transform:uppercase;
+     letter-spacing:.02em;margin:clamp(8px,1.2vw,14px) 0 0}
+  p.lede{margin:clamp(10px,1.4vw,16px) auto 0;max-width:44ch;
+         font-size:clamp(14px,1.6vw,18px);opacity:.75}
+  .btn{display:inline-block;margin-top:clamp(24px,3.4vw,38px);padding:14px 32px;
+       border-radius:999px;background:var(--navy);color:var(--cream);text-decoration:none;
+       font-size:clamp(13px,1.4vw,16px);font-weight:700;letter-spacing:.06em;
+       text-transform:uppercase;transition:background .3s var(--ease),transform .3s var(--ease)}
+  .btn:hover{background:var(--gold-deep);transform:translateY(-2px)}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+  .rule{width:64px;height:4px;border-radius:2px;margin:clamp(18px,2.4vw,26px) auto 0;
+        background:linear-gradient(90deg,var(--gold) 0%,#DCAE4C 100%)}
+</style>
+</head>
+<body>
+
+  <header class="brand">
+    <p class="brand__mark">Bansal</p>
+    <p class="brand__sub">International School</p>
+  </header>
+
+  <main>
+    <div>
+      <p class="code">404</p>
+      <h1>This page has moved on</h1>
+      <span class="rule" aria-hidden="true"></span>
+      <p class="lede">We couldn't find the page you were looking for — but the school is right where you left it.</p>
+      <a class="btn" href="./">Back to home</a>
+    </div>
+  </main>
+
+</body>
+</html>

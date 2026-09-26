@@ -7,8 +7,11 @@ Static one-page website for **Bansal International School**, Kalali, Vadodara
 
 ```
 index.html                  the whole page
+404.html                    not-found page (self-contained, no assets)
+robots.txt / sitemap.xml    search-engine plumbing
+.nojekyll                   stops GitHub Pages running the site through Jekyll
 assets/css/style.css        all styling (single stylesheet)
-assets/js/main.js           scroll reveal + video lightbox
+assets/js/main.js           scroll reveal + the school film
 assets/fonts/               Playfair Display, self-hosted (woff2)
 assets/img/                 logo, hero photo, campus art, favicon
 deploy/                     nginx config + server deploy script
@@ -27,18 +30,38 @@ No build step, no dependencies — plain HTML/CSS/JS.
 
 ## The video
 
-`site/assets/js/main.js` holds the video configuration at the top:
+`assets/js/main.js` holds the video configuration at the top:
 
 ```js
 const SITE = {
-  videoUrl: "https://www.youtube.com/embed/lIr4FbOtliw",   // the school film
+  videoUrl: "https://www.youtube-nocookie.com/embed/lIr4FbOtliw",
   videoPoster: "assets/img/school-render.jpg"
 };
 ```
 
-Clicking the **Play School Video** card under the hero opens the film in a
-lightbox (Esc or the ✕ closes it). To change the film, replace the embed URL.
-A self-hosted `.mp4` path also works — the player detects the file type.
+Clicking the **Play School Video** card under the hero swaps the poster for the
+real player **in place** — no popup, no modal, nothing to get out of sync. It
+uses YouTube's privacy-enhanced host, so no cookies are set until playback
+starts. A "Watch it on YouTube" link sits under the card as a fallback for
+networks that block embeds.
+
+To change the film, replace `videoUrl` with any YouTube/Vimeo **embed** URL. A
+self-hosted `.mp4` path also works — the player detects the file type.
+
+## Going live on your own domain
+
+The page carries absolute URLs for link previews, structured data and the
+sitemap. When you move to your own domain, update these four files:
+
+| File | What to change |
+|---|---|
+| `index.html` | `og:url`, `og:image`, and the two `url`/`logo`/`image` values in the JSON-LD block |
+| `robots.txt` | the `Sitemap:` line |
+| `sitemap.xml` | the `<loc>` value |
+| `deploy/nginx.conf` | `server_name` |
+
+Then add a `CNAME` file containing just your domain if you're staying on GitHub
+Pages.
 
 ## Run it locally
 

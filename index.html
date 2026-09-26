@@ -10,9 +10,15 @@
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Bansal International School">
 <meta property="og:title" content="Bansal International School — A New Landmark in Learning">
 <meta property="og:description" content="Coming soon in Kalali, Vadodara. By P. N. Group of Education.">
-<meta property="og:image" content="assets/img/school-render.jpg">
+<meta property="og:url" content="https://ankit247250.github.io/bansal-international-school/">
+<meta property="og:image" content="https://ankit247250.github.io/bansal-international-school/assets/img/school-render.jpg">
+<meta property="og:image:width" content="1410">
+<meta property="og:image:height" content="890">
+<meta property="og:image:alt" content="Artist's impression of the planned Bansal International School campus">
+<meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
@@ -20,6 +26,32 @@
 
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-latin.woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
+
+<!-- video host -->
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="dns-prefetch" href="https://i.ytimg.com">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "School",
+  "name": "Bansal International School",
+  "alternateName": "BIS Kalali",
+  "description": "A new landmark in learning by P. N. Group of Education — coming soon in Kalali, Vadodara.",
+  "url": "https://ankit247250.github.io/bansal-international-school/",
+  "logo": "https://ankit247250.github.io/bansal-international-school/assets/img/logo.png",
+  "image": "https://ankit247250.github.io/bansal-international-school/assets/img/school-render.jpg",
+  "telephone": "+91-98259-25913",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Kalali",
+    "addressRegion": "Vadodara, Gujarat",
+    "addressCountry": "IN"
+  },
+  "parentOrganization": { "@type": "Organization", "name": "P. N. Group of Education" },
+  "sameAs": ["https://www.youtube.com/@BISKALALI"]
+}
+</script>
 </head>
 <body>
 
@@ -59,18 +91,30 @@
       <p class="eyebrow reveal">The Vision Is Coming To Life,</p>
       <h2 class="h-display vision__title reveal" id="vision-title">Watch Our <span class="t-gold">Vision</span></h2>
 
-      <button class="video-card reveal" id="playVideo" type="button"
-              aria-label="Play the Bansal International School video">
+      <div class="video-card reveal" id="videoCard">
         <span class="video-card__sky" aria-hidden="true"></span>
-        <img class="video-card__img" src="assets/img/school-render.jpg" alt="Artist's impression of the Bansal International School campus" width="1410" height="890" loading="lazy">
+        <img class="video-card__img" src="assets/img/school-render.jpg"
+             alt="Artist's impression of the planned Bansal International School campus"
+             width="1410" height="890" loading="lazy" decoding="async">
         <span class="video-card__veil" aria-hidden="true"></span>
-        <span class="video-card__center">
+
+        <button class="video-card__trigger" id="playVideo" type="button"
+                aria-expanded="false" aria-controls="videoPlayer"
+                aria-label="Play the Bansal International School film">
           <span class="play-btn" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false"><path d="M8.5 5.6v12.8c0 .9 1 1.4 1.7 1L20 13a1.2 1.2 0 0 0 0-2L10.2 4.6c-.7-.4-1.7.1-1.7 1Z"/></svg>
           </span>
           <span class="video-card__label">Play School Video</span>
-        </span>
-      </button>
+        </button>
+
+        <!-- the YouTube player is injected here, in place of the poster -->
+        <div class="video-card__player" id="videoPlayer"></div>
+      </div>
+
+      <p class="vision__fallback reveal">
+        Film not loading?
+        <a href="https://youtu.be/lIr4FbOtliw" target="_blank" rel="noopener">Watch it on YouTube</a>
+      </p>
     </div>
   </section>
 
@@ -269,15 +313,6 @@
     </p>
   </div>
 </footer>
-
-<!-- ══ Video lightbox ══════════════════════════════════════════════ -->
-<div class="lightbox" id="lightbox" hidden>
-  <div class="lightbox__backdrop" data-close></div>
-  <div class="lightbox__dialog" role="dialog" aria-modal="true" aria-label="Bansal International School video">
-    <button class="lightbox__close" type="button" data-close aria-label="Close video">&times;</button>
-    <div class="lightbox__stage" id="lightboxStage"></div>
-  </div>
-</div>
 
 <script src="assets/js/main.js" defer></script>
 </body>
